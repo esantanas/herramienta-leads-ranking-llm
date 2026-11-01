@@ -1,0 +1,277 @@
+{
+  "generated_at": "2026-10-31T21:03:57.551Z",
+  "model": "gemini-3.6-flash",
+  "results": [
+    {
+      "conversation_id": "conv-001",
+      "intent": "comprar",
+      "urgency": "media",
+      "budget": null,
+      "down_payment": {
+        "amount": 900,
+        "currency": "UF"
+      },
+      "property_type": "2D",
+      "has_preapproved_credit": false,
+      "seeks_subsidy": false,
+      "out_of_scope": false,
+      "rejected_alternatives": false,
+      "needs_human_intervention": false,
+      "intervention_reason": null,
+      "one_line_summary": "Busca depto 2D para vivir con pareja, mudanza antes de marzo, tiene pie de UF 900.",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "media",
+      "priority_reasons": [
+        "urgencia media (+2)",
+        "pie declarado (+1)",
+        "tipo de propiedad definido (+1)",
+        "score 4 → media"
+      ],
+      "is_actionable": true
+    },
+    {
+      "conversation_id": "conv-002",
+      "intent": "alquilar",
+      "urgency": "desconocida",
+      "budget": null,
+      "down_payment": null,
+      "property_type": "estudio",
+      "has_preapproved_credit": false,
+      "seeks_subsidy": false,
+      "out_of_scope": true,
+      "rejected_alternatives": true,
+      "needs_human_intervention": false,
+      "intervention_reason": null,
+      "one_line_summary": "Buscaba arriendo de estudio (fuera de catálogo) y rechazó opciones de venta.",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "descartar",
+      "priority_reasons": [
+        "fuera de catálogo y rechazó alternativas"
+      ],
+      "is_actionable": false
+    },
+    {
+      "conversation_id": "conv-003",
+      "intent": "invertir",
+      "urgency": "desconocida",
+      "budget": {
+        "amount": 9000,
+        "currency": "UF",
+        "scope": "total"
+      },
+      "down_payment": null,
+      "property_type": "1D",
+      "has_preapproved_credit": false,
+      "seeks_subsidy": false,
+      "out_of_scope": false,
+      "rejected_alternatives": false,
+      "needs_human_intervention": false,
+      "intervention_reason": null,
+      "one_line_summary": "Inversionista busca 2 o 3 unidades pequeñas de entrega inmediata con presupuesto total de UF 9.000.",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "media",
+      "priority_reasons": [
+        "presupuesto declarado (+2)",
+        "tipo de propiedad definido (+1)",
+        "perfil inversionista (+1)",
+        "score 4 → media"
+      ],
+      "is_actionable": true
+    },
+    {
+      "conversation_id": "conv-004",
+      "intent": "no_lead",
+      "urgency": "desconocida",
+      "budget": null,
+      "down_payment": null,
+      "property_type": null,
+      "has_preapproved_credit": false,
+      "seeks_subsidy": false,
+      "out_of_scope": false,
+      "rejected_alternatives": false,
+      "needs_human_intervention": false,
+      "intervention_reason": null,
+      "one_line_summary": "El usuario indica haberse equivocado de número.",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "descartar",
+      "priority_reasons": [
+        "número equivocado o sin interés real"
+      ],
+      "is_actionable": false
+    },
+    {
+      "conversation_id": "conv-005",
+      "intent": "comprar",
+      "urgency": "alta",
+      "budget": {
+        "amount": 3500,
+        "currency": "UF",
+        "scope": "total"
+      },
+      "down_payment": null,
+      "property_type": "1D",
+      "has_preapproved_credit": true,
+      "seeks_subsidy": false,
+      "out_of_scope": false,
+      "rejected_alternatives": false,
+      "needs_human_intervention": false,
+      "intervention_reason": null,
+      "one_line_summary": "Busca 1D urgente para comprar antes del 30, presupuesto max 3.500 UF con crédito preaprobado.",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "alta",
+      "priority_reasons": [
+        "urgencia alta (+3)",
+        "presupuesto declarado (+2)",
+        "tipo de propiedad definido (+1)",
+        "crédito preaprobado (+2)",
+        "score 8 → alta"
+      ],
+      "is_actionable": true
+    },
+    {
+      "conversation_id": "conv-006",
+      "intent": "consulta",
+      "urgency": "baja",
+      "budget": null,
+      "down_payment": null,
+      "property_type": null,
+      "has_preapproved_credit": false,
+      "seeks_subsidy": false,
+      "out_of_scope": false,
+      "rejected_alternatives": false,
+      "needs_human_intervention": false,
+      "intervention_reason": null,
+      "one_line_summary": "Pregunta por inclusión de estacionamiento/bodega y menciona estar recién empezando a cotizar.",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "baja",
+      "priority_reasons": [
+        "consulta general sin intención de compra"
+      ],
+      "is_actionable": false
+    },
+    {
+      "conversation_id": "conv-007",
+      "intent": "comprar",
+      "urgency": "desconocida",
+      "budget": null,
+      "down_payment": null,
+      "property_type": "3D",
+      "has_preapproved_credit": false,
+      "seeks_subsidy": true,
+      "out_of_scope": false,
+      "rejected_alternatives": false,
+      "needs_human_intervention": true,
+      "intervention_reason": "Consulta sobre subsidio DS19",
+      "one_line_summary": "Familia de 4 busca depto 3D y consulta sobre opción de subsidio DS19.",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "media",
+      "priority_reasons": [
+        "tipo de propiedad definido (+1)",
+        "busca subsidio (+1)",
+        "bot no puede resolver: requiere humano (+2)",
+        "score 4 → media"
+      ],
+      "is_actionable": true
+    },
+    {
+      "conversation_id": "conv-008",
+      "intent": "reclamo",
+      "urgency": "desconocida",
+      "budget": null,
+      "down_payment": null,
+      "property_type": null,
+      "has_preapproved_credit": false,
+      "seeks_subsidy": false,
+      "out_of_scope": false,
+      "rejected_alternatives": false,
+      "needs_human_intervention": true,
+      "intervention_reason": "reclamo por falta de contacto de ejecutivo y visita fallida",
+      "one_line_summary": "Reclamo del cliente por falta de contacto del ejecutivo y porque no asistieron a la visita agendada.",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "alta",
+      "priority_reasons": [
+        "reclamo: riesgo reputacional, requiere humano urgente"
+      ],
+      "is_actionable": true
+    },
+    {
+      "conversation_id": "conv-009",
+      "intent": "intento_manipulacion",
+      "urgency": "desconocida",
+      "budget": null,
+      "down_payment": null,
+      "property_type": null,
+      "has_preapproved_credit": false,
+      "seeks_subsidy": false,
+      "out_of_scope": false,
+      "rejected_alternatives": false,
+      "needs_human_intervention": true,
+      "intervention_reason": "intento de manipulación del asistente",
+      "one_line_summary": "El usuario intentó manipular al asistente pidiendo ignorar instrucciones e información confidencial.",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "descartar",
+      "priority_reasons": [
+        "intento de manipulación del asistente",
+        "descartar para venta; revisar logs de seguridad"
+      ],
+      "is_actionable": false
+    },
+    {
+      "conversation_id": "conv-010",
+      "intent": "comprar",
+      "urgency": "desconocida",
+      "budget": null,
+      "down_payment": null,
+      "property_type": "local comercial",
+      "has_preapproved_credit": false,
+      "seeks_subsidy": false,
+      "out_of_scope": true,
+      "rejected_alternatives": false,
+      "needs_human_intervention": false,
+      "intervention_reason": null,
+      "one_line_summary": "Consulta por disponibilidad de locales comerciales para una cafetería (producto fuera de catálogo).",
+      "confidence": 0.95,
+      "audit": [],
+      "priority": "baja",
+      "priority_reasons": [
+        "fuera de catálogo, posible reorientación"
+      ],
+      "is_actionable": false
+    }
+  ],
+  "metrics": {
+    "total": 10,
+    "by_intent": {
+      "comprar": 4,
+      "alquilar": 1,
+      "invertir": 1,
+      "no_lead": 1,
+      "consulta": 1,
+      "reclamo": 1,
+      "intento_manipulacion": 1
+    },
+    "by_priority": {
+      "media": 3,
+      "descartar": 3,
+      "alta": 2,
+      "baja": 2
+    },
+    "actionable_rate": 0.5,
+    "needs_human_count": 3,
+    "fields_missing_rate": {
+      "budget": 0.8,
+      "urgency": 0.7
+    },
+    "avg_confidence": 0.95,
+    "estimated_time_saved_minutes": 17.5
+  }
+}

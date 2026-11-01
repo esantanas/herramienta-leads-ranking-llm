@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+output/*.tmp
+.env.local
+*.log
+README.md
+clave_temp.txt
+*.txt.bak

@@ -1,0 +1,26 @@
+{
+  "total": 10,
+  "by_intent": {
+    "comprar": 4,
+    "alquilar": 1,
+    "invertir": 1,
+    "no_lead": 1,
+    "consulta": 1,
+    "reclamo": 1,
+    "intento_manipulacion": 1
+  },
+  "by_priority": {
+    "media": 3,
+    "descartar": 3,
+    "alta": 2,
+    "baja": 2
+  },
+  "actionable_rate": 0.5,
+  "needs_human_count": 3,
+  "fields_missing_rate": {
+    "budget": 0.8,
+    "urgency": 0.7
+  },
+  "avg_confidence": 0.95,
+  "estimated_time_saved_minutes": 17.5
+}
