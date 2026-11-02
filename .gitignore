@@ -4,6 +4,5 @@ dist/
 output/*.tmp
 .env.local
 *.log
-README.md
 clave_temp.txt
 *.txt.bak
