@@ -161,17 +161,16 @@ Resultado de la corrida sobre las 10 conversaciones reales:
 
 En lo relativo a los costos, cada llamada a Gemini registra sus tokens reales y el costo se calcula con la tarifa vigente del modelo.
 
-|
-| Valor |
-|---|---|
-| Modelo | gemini-3.6-flash ($0,75 / $3,75 por millón de tokens de entrada / salida) |
-| Llamadas al LLM | 10 (1 por conversación, sin reintentos) |
-| Tokens de entrada | 33.341 (~3.330 por conversación) |
-| Tokens de salida | 3.054 (~305 por conversación) |
-| Tokens totales | 36.395 |
-| Costo total | $0,0365 USD |
-| Costo por conversación | $0,0035 – $0,0039 USD (promedio $0,0036) |
-| Latencia por llamada | ~3,5 s |
+| Métrica                | Valor                                                                       |
+| :--------------------- | :-------------------------------------------------------------------------- |
+| Modelo                 | `gemini-3.6-flash` ($0,75 / $3,75 por millón de tokens de entrada / salida) |
+| Llamadas al LLM        | 10 (1 por conversación, sin reintentos)                                     |
+| Tokens de entrada      | 33.341 (~3.330 por conversación)                                            |
+| Tokens de salida       | 3.054 (~305 por conversación)                                               |
+| Tokens totales         | 36.395                                                                      |
+| Costo total\*          | $0,0365 USD                                                                 |
+| Costo por conversación | $0,0035 – $0,0039 USD (promedio $0,0036)                                    |
+| Latencia por llamada   | ~3,5 s                                                                      |
 
 A la tarifa actual, procesar 1.000 conversaciones costaría solo unos 3,65 USD. El código ya está preparado por si la tarifa de Gemini sube en 2027, ajustando el cálculo automáticamente en el archivo batch.ts.
 Respecto a de dónde viene este costo, el 92% de los tokens son de entrada. La mayor parte de eso es el system prompt (las reglas, el catálogo y los ejemplos), que es idéntico en cada llamada. La conversación en sí y la respuesta del LLM, son una fracción menor.
