@@ -6,3 +6,4 @@ output/*.tmp
 *.log
 clave_temp.txt
 *.txt.bak
+*.docx
