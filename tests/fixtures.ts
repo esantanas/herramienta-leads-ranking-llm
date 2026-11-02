@@ -1,15 +1,27 @@
 import { readFileSync } from "node:fs";
 import { z } from "zod";
-import { ConversationSchema, type Conversation, type RawLlmOutput } from "../src/schema.js";
+import {
+  ConversationSchema,
+  type Conversation,
+  type RawLlmOutput,
+} from "../src/schema.js";
 
 const conversations = z
   .array(ConversationSchema)
-  .parse(JSON.parse(readFileSync(new URL("../data/conversations.json", import.meta.url), "utf8")));
+  .parse(
+    JSON.parse(
+      readFileSync(
+        new URL("../data/conversaciones.json", import.meta.url),
+        "utf8",
+      ),
+    ),
+  );
 
 /** Conversación real de data/conversations.json. */
 export function conv(id: string): Conversation {
   const found = conversations.find((c) => c.id === id);
-  if (!found) throw new Error(`Conversación ${id} no existe en data/conversations.json`);
+  if (!found)
+    throw new Error(`Conversación ${id} no existe en data/conversaciones.json`);
   return found;
 }
 

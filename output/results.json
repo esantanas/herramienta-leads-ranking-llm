@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T21:03:57.551Z",
+  "generated_at": "2026-11-02T00:41:46.149Z",
   "model": "gemini-3.6-flash",
   "results": [
     {
@@ -43,7 +43,7 @@
       "rejected_alternatives": true,
       "needs_human_intervention": false,
       "intervention_reason": null,
-      "one_line_summary": "Buscaba arriendo de estudio (fuera de catálogo) y rechazó opciones de venta.",
+      "one_line_summary": "Buscaba arriendo de estudio (fuera de catálogo) y rechazó las opciones de venta.",
       "confidence": 0.95,
       "audit": [],
       "priority": "descartar",
@@ -62,22 +62,21 @@
         "scope": "total"
       },
       "down_payment": null,
-      "property_type": "1D",
+      "property_type": null,
       "has_preapproved_credit": false,
       "seeks_subsidy": false,
       "out_of_scope": false,
       "rejected_alternatives": false,
       "needs_human_intervention": false,
       "intervention_reason": null,
-      "one_line_summary": "Inversionista busca 2 o 3 unidades pequeñas de entrega inmediata con presupuesto total de UF 9.000.",
+      "one_line_summary": "Inversionista busca 2 o 3 unidades pequeñas con presupuesto total de hasta UF 9.000.",
       "confidence": 0.95,
       "audit": [],
       "priority": "media",
       "priority_reasons": [
         "presupuesto declarado (+2)",
-        "tipo de propiedad definido (+1)",
         "perfil inversionista (+1)",
-        "score 4 → media"
+        "score 3 → media"
       ],
       "is_actionable": true
     },
@@ -94,7 +93,7 @@
       "rejected_alternatives": false,
       "needs_human_intervention": false,
       "intervention_reason": null,
-      "one_line_summary": "El usuario indica haberse equivocado de número.",
+      "one_line_summary": "El usuario indica que se equivocó de número.",
       "confidence": 0.95,
       "audit": [],
       "priority": "descartar",
@@ -120,7 +119,7 @@
       "rejected_alternatives": false,
       "needs_human_intervention": false,
       "intervention_reason": null,
-      "one_line_summary": "Busca 1D urgente para comprar antes del 30, presupuesto max 3.500 UF con crédito preaprobado.",
+      "one_line_summary": "Busca comprar depto 1D urgente antes del 30, presupuesto máximo 3.500 UF y crédito preaprobado.",
       "confidence": 0.95,
       "audit": [],
       "priority": "alta",
@@ -146,8 +145,8 @@
       "rejected_alternatives": false,
       "needs_human_intervention": false,
       "intervention_reason": null,
-      "one_line_summary": "Pregunta por inclusión de estacionamiento/bodega y menciona estar recién empezando a cotizar.",
-      "confidence": 0.95,
+      "one_line_summary": "Pregunta por inclusión de estacionamiento y bodega; declara estar recién comenzando a buscar.",
+      "confidence": 0.9,
       "audit": [],
       "priority": "baja",
       "priority_reasons": [
@@ -167,8 +166,8 @@
       "out_of_scope": false,
       "rejected_alternatives": false,
       "needs_human_intervention": true,
-      "intervention_reason": "Consulta sobre subsidio DS19",
-      "one_line_summary": "Familia de 4 busca depto 3D y consulta sobre opción de subsidio DS19.",
+      "intervention_reason": "consulta sobre subsidio DS19",
+      "one_line_summary": "Familia de 4 consulta por depto 3D y postulación a subsidio DS19 declarando ingresos.",
       "confidence": 0.95,
       "audit": [],
       "priority": "media",
@@ -192,8 +191,8 @@
       "out_of_scope": false,
       "rejected_alternatives": false,
       "needs_human_intervention": true,
-      "intervention_reason": "reclamo por falta de contacto de ejecutivo y visita fallida",
-      "one_line_summary": "Reclamo del cliente por falta de contacto del ejecutivo y porque no asistieron a la visita agendada.",
+      "intervention_reason": "Reclamo por falta de contacto de ejecutivo y visita fallida.",
+      "one_line_summary": "Reclamo por no recibir llamada de ejecutivo y falta de atención en visita agendada.",
       "confidence": 0.95,
       "audit": [],
       "priority": "alta",
@@ -215,7 +214,7 @@
       "rejected_alternatives": false,
       "needs_human_intervention": true,
       "intervention_reason": "intento de manipulación del asistente",
-      "one_line_summary": "El usuario intentó manipular al asistente pidiendo ignorar instrucciones e información confidencial.",
+      "one_line_summary": "El usuario intentó manipular al asistente pidiendo ignorar instrucciones y solicitar descuentos internos.",
       "confidence": 0.95,
       "audit": [],
       "priority": "descartar",
@@ -238,7 +237,7 @@
       "rejected_alternatives": false,
       "needs_human_intervention": false,
       "intervention_reason": null,
-      "one_line_summary": "Consulta por disponibilidad de locales comerciales para una cafetería (producto fuera de catálogo).",
+      "one_line_summary": "Busca comprar un local comercial para poner una cafetería (producto fuera de catálogo).",
       "confidence": 0.95,
       "audit": [],
       "priority": "baja",
@@ -271,7 +270,7 @@
       "budget": 0.8,
       "urgency": 0.7
     },
-    "avg_confidence": 0.95,
+    "avg_confidence": 0.945,
     "estimated_time_saved_minutes": 17.5
   }
 }

@@ -115,20 +115,29 @@ export const RawLlmOutputSchema = RawLlmOutputObjectSchema
     error: "down_payment_evidence debe ser null cuando down_payment es null",
   })
   // Igual que budget: si no se identificó tipo de propiedad, no puede haber cita del tipo.
-  .refine((o) => o.property_type !== null || o.property_type_evidence === null, {
-    path: ["property_type_evidence"],
-    error: "property_type_evidence debe ser null cuando property_type es null",
-  })
+  .refine(
+    (o) => o.property_type !== null || o.property_type_evidence === null,
+    {
+      path: ["property_type_evidence"],
+      error:
+        "property_type_evidence debe ser null cuando property_type es null",
+    },
+  )
   // "desconocida" significa que el lead no dio señal de plazo; una cita contradice esa clasificación.
   .refine((o) => o.urgency !== "desconocida" || o.urgency_evidence === null, {
     path: ["urgency_evidence"],
     error: "urgency_evidence debe ser null cuando urgency es 'desconocida'",
   })
   // Crédito preaprobado es una afirmación sobre el lead que sube su prioridad: exige cita.
-  .refine((o) => !o.has_preapproved_credit || o.has_preapproved_credit_evidence !== null, {
-    path: ["has_preapproved_credit_evidence"],
-    error: "has_preapproved_credit_evidence es obligatorio cuando has_preapproved_credit es true",
-  })
+  .refine(
+    (o) =>
+      !o.has_preapproved_credit || o.has_preapproved_credit_evidence !== null,
+    {
+      path: ["has_preapproved_credit_evidence"],
+      error:
+        "has_preapproved_credit_evidence es obligatorio cuando has_preapproved_credit es true",
+    },
+  )
   // Buscar subsidio cambia el tipo de asesoría que necesita el lead: exige cita.
   .refine((o) => !o.seeks_subsidy || o.seeks_subsidy_evidence !== null, {
     path: ["seeks_subsidy_evidence"],
@@ -140,10 +149,15 @@ export const RawLlmOutputSchema = RawLlmOutputObjectSchema
     error: "out_of_scope_evidence es obligatorio cuando out_of_scope es true",
   })
   // Que el lead rechazó las alternativas puede llevar a descartarlo: exige su cita textual.
-  .refine((o) => !o.rejected_alternatives || o.rejected_alternatives_evidence !== null, {
-    path: ["rejected_alternatives_evidence"],
-    error: "rejected_alternatives_evidence es obligatorio cuando rejected_alternatives es true",
-  });
+  .refine(
+    (o) =>
+      !o.rejected_alternatives || o.rejected_alternatives_evidence !== null,
+    {
+      path: ["rejected_alternatives_evidence"],
+      error:
+        "rejected_alternatives_evidence es obligatorio cuando rejected_alternatives es true",
+    },
+  );
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Salida validada (input del scoring)
@@ -162,7 +176,9 @@ const EVIDENCE_KEYS = {
 } as const;
 
 /** Igual que la salida cruda pero sin citas (ya verificadas) y con el registro de anulaciones. */
-export const ValidatedOutputSchema = RawLlmOutputObjectSchema.omit(EVIDENCE_KEYS).extend({
+export const ValidatedOutputSchema = RawLlmOutputObjectSchema.omit(
+  EVIDENCE_KEYS,
+).extend({
   audit: z.array(z.string()),
 });
 
@@ -213,26 +229,48 @@ export class LlmParseError extends Error {
  *   3. el primer {...} con llaves balanceadas (ignora llaves dentro de strings);
  *   4. regex codiciosa desde el primer "{" hasta el último "}".
  */
-export function parseLlmJson(text: string): Result<RawLlmOutput, LlmParseError> {
+export function parseLlmJson(
+  text: string,
+): Result<RawLlmOutput, LlmParseError> {
   try {
     if (typeof text !== "string" || text.trim() === "") {
-      return { ok: false, error: new LlmParseError("empty_input", "La respuesta del LLM está vacía") };
+      return {
+        ok: false,
+        error: new LlmParseError(
+          "empty_input",
+          "La respuesta del LLM está vacía",
+        ),
+      };
     }
 
     const json = extractJson(text);
-    if (!json.ok) return { ok: false, error: new LlmParseError("invalid_json", json.error) };
+    if (!json.ok)
+      return {
+        ok: false,
+        error: new LlmParseError("invalid_json", json.error),
+      };
 
     const parsed = RawLlmOutputSchema.safeParse(json.value);
     if (!parsed.success) {
       return {
         ok: false,
-        error: new LlmParseError("schema", formatIssues(parsed.error.issues), parsed.error.issues),
+        error: new LlmParseError(
+          "schema",
+          formatIssues(parsed.error.issues),
+          parsed.error.issues,
+        ),
       };
     }
     return { ok: true, value: parsed.data };
   } catch (e) {
     // Red de seguridad: el contrato es no lanzar nunca.
-    return { ok: false, error: new LlmParseError("invalid_json", e instanceof Error ? e.message : String(e)) };
+    return {
+      ok: false,
+      error: new LlmParseError(
+        "invalid_json",
+        e instanceof Error ? e.message : String(e),
+      ),
+    };
   }
 }
 
@@ -291,5 +329,7 @@ function firstBalancedObject(text: string): string | null {
 }
 
 function formatIssues(issues: readonly z.core.$ZodIssue[]): string {
-  return issues.map((i) => `${i.path.length ? i.path.join(".") : "(root)"}: ${i.message}`).join("; ");
+  return issues
+    .map((i) => `${i.path.length ? i.path.join(".") : "(root)"}: ${i.message}`)
+    .join("; ");
 }

@@ -29,7 +29,11 @@ import { pathToFileURL } from "node:url";
 import { pino, type Logger } from "pino";
 import { z } from "zod";
 import { geminiOptionsFromEnv } from "./config.js";
-import { GeminiClient, LlmClientError, type LlmCallLogEntry } from "./llm/geminiClient.js";
+import {
+  GeminiClient,
+  LlmClientError,
+  type LlmCallLogEntry,
+} from "./llm/geminiClient.js";
 import { calculateMetrics, type Metrics } from "./metrics.js";
 import { Analyzer, toMetricsInput, type AnalysisResult } from "./pipeline.js";
 import { ConversationSchema, type Conversation } from "./schema.js";
@@ -70,7 +74,9 @@ export interface PricePeriod extends Pricing {
  * Si el modelo no está en la tabla ni en el .env, el costo se informa como
  * null ("sin precio"), nunca como $0.
  */
-export const MODEL_PRICING_USD_PER_MILLION: Readonly<Record<string, readonly PricePeriod[]>> = Object.freeze({
+export const MODEL_PRICING_USD_PER_MILLION: Readonly<
+  Record<string, readonly PricePeriod[]>
+> = Object.freeze({
   "gemini-2.5-flash": [{ inputPerMillion: 0.3, outputPerMillion: 2.5 }],
   "gemini-2.5-flash-lite": [{ inputPerMillion: 0.1, outputPerMillion: 0.4 }],
   "gemini-3-flash-preview": [{ inputPerMillion: 0.5, outputPerMillion: 3.0 }],
@@ -97,14 +103,20 @@ export interface ResolvedPricing extends Pricing {
 /** "0.75", "0,75" o " 3.75 " → número. undefined si no es un número ≥ 0. */
 export function parsePrice(raw: string): number | undefined {
   const value = Number(raw.trim().replace(",", "."));
-  return raw.trim() !== "" && Number.isFinite(value) && value >= 0 ? value : undefined;
+  return raw.trim() !== "" && Number.isFinite(value) && value >= 0
+    ? value
+    : undefined;
 }
 
 /**
  * Precio para `model` en la fecha `now`. Lanza si las variables de entorno de
  * precio están incompletas o mal escritas (mejor fallar que calcular $0).
  */
-export function resolvePricing(model: string, env: NodeJS.ProcessEnv = process.env, now: Date = new Date()): ResolvedPricing {
+export function resolvePricing(
+  model: string,
+  env: NodeJS.ProcessEnv = process.env,
+  now: Date = new Date(),
+): ResolvedPricing {
   const rawIn = env.GEMINI_PRICE_INPUT_PER_M?.trim() ?? "";
   const rawOut = env.GEMINI_PRICE_OUTPUT_PER_M?.trim() ?? "";
   if (rawIn !== "" || rawOut !== "") {
@@ -123,10 +135,14 @@ export function resolvePricing(model: string, env: NodeJS.ProcessEnv = process.e
     .filter((key) => model === key || model.startsWith(`${key}-`))
     .sort((a, b) => b.length - a.length)[0];
   const periods = matched ? MODEL_PRICING_USD_PER_MILLION[matched] : undefined;
-  if (!matched || !periods) return { inputPerMillion: 0, outputPerMillion: 0, source: "unknown" };
+  if (!matched || !periods)
+    return { inputPerMillion: 0, outputPerMillion: 0, source: "unknown" };
 
   const today = now.toISOString().slice(0, 10);
-  const current = [...periods].reverse().find((p) => p.from === undefined || p.from <= today) ?? periods[0]!;
+  const current =
+    [...periods]
+      .reverse()
+      .find((p) => p.from === undefined || p.from <= today) ?? periods[0]!;
   return {
     inputPerMillion: current.inputPerMillion,
     outputPerMillion: current.outputPerMillion,
@@ -202,7 +218,10 @@ export interface BatchDeps {
   readonly pricing: ResolvedPricing;
 }
 
-export async function runBatch(conversations: readonly Conversation[], deps: BatchDeps): Promise<BatchReport> {
+export async function runBatch(
+  conversations: readonly Conversation[],
+  deps: BatchDeps,
+): Promise<BatchReport> {
   const { analyzer, logger } = deps;
   const startedAt = performance.now();
   const entries: BatchEntry[] = [];
@@ -213,7 +232,10 @@ export async function runBatch(conversations: readonly Conversation[], deps: Bat
 
   for (const conversation of conversations) {
     if (fatalError) {
-      entries.push({ conversation_id: conversation.id, error: `No procesada: ${fatalError}` });
+      entries.push({
+        conversation_id: conversation.id,
+        error: `No procesada: ${fatalError}`,
+      });
       continue;
     }
     try {
@@ -226,20 +248,36 @@ export async function runBatch(conversations: readonly Conversation[], deps: Bat
           { conversation_id: conversation.id, err: r.error.message },
           "error de configuración o cuota: se omiten las conversaciones restantes",
         );
-        entries.push({ conversation_id: conversation.id, error: r.error.message });
+        entries.push({
+          conversation_id: conversation.id,
+          error: r.error.message,
+        });
       } else {
-        logger.error({ conversation_id: conversation.id, err: r.error.message }, "conversación falló; se continúa");
-        entries.push({ conversation_id: conversation.id, error: r.error.message });
+        logger.error(
+          { conversation_id: conversation.id, err: r.error.message },
+          "conversación falló; se continúa",
+        );
+        entries.push({
+          conversation_id: conversation.id,
+          error: r.error.message,
+        });
       }
     } catch (e) {
       // analyze() no debería lanzar, pero un bug no debe abortar el batch.
       const message = e instanceof Error ? e.message : String(e);
-      logger.error({ conversation_id: conversation.id, err: message }, "error inesperado; se continúa");
+      logger.error(
+        { conversation_id: conversation.id, err: message },
+        "error inesperado; se continúa",
+      );
       entries.push({ conversation_id: conversation.id, error: message });
     }
   }
 
-  const metrics = calculateMetrics(entries.filter((e) => !isBatchError(e)).map((e) => toMetricsInput(e as AnalysisResult)));
+  const metrics = calculateMetrics(
+    entries
+      .filter((e) => !isBatchError(e))
+      .map((e) => toMetricsInput(e as AnalysisResult)),
+  );
   const costs = buildCostReport(
     conversations.map((c) => c.id),
     deps.callLog,
@@ -250,7 +288,12 @@ export async function runBatch(conversations: readonly Conversation[], deps: Bat
   );
 
   return {
-    results: { generated_at: new Date().toISOString(), model: deps.model, results: entries, metrics },
+    results: {
+      generated_at: new Date().toISOString(),
+      model: deps.model,
+      results: entries,
+      metrics,
+    },
     metrics,
     costs,
   };
@@ -265,16 +308,25 @@ export function isFatalForBatch(error: Error): boolean {
   if (error.kind === "quota_exhausted") return true;
   if (error.kind !== "http") return false;
   const status = error.details.status;
-  return status === 401 || status === 403 || status === 404 || (status === 400 && /api key/i.test(error.message));
+  return (
+    status === 401 ||
+    status === 403 ||
+    status === 404 ||
+    (status === 400 && /api key/i.test(error.message))
+  );
 }
 
 function shortReason(error: Error): string {
-  if (error instanceof LlmClientError && error.kind === "quota_exhausted") return error.message.split(". ")[0] ?? error.message;
-  const status = error instanceof LlmClientError ? error.details.status : undefined;
+  if (error instanceof LlmClientError && error.kind === "quota_exhausted")
+    return error.message.split(". ")[0] ?? error.message;
+  const status =
+    error instanceof LlmClientError ? error.details.status : undefined;
   const label =
-    status === 404 ? "modelo no disponible para esta cuenta (revisa GEMINI_MODEL)"
-    : status === 401 || status === 403 || status === 400 ? "API key inválida o sin permisos (revisa GEMINI_API_KEY)"
-    : "error de configuración";
+    status === 404
+      ? "modelo no disponible para esta cuenta (revisa GEMINI_MODEL)"
+      : status === 401 || status === 403 || status === 400
+        ? "API key inválida o sin permisos (revisa GEMINI_API_KEY)"
+        : "error de configuración";
   return `Gemini HTTP ${status ?? "?"}: ${label}`;
 }
 
@@ -291,7 +343,10 @@ export function buildCostReport(
   logger: Logger,
 ): CostReport {
   if (pricing.source === "unknown") {
-    logger.warn({ model }, "modelo sin precio configurado: estimatedCostUSD = null (agrega el modelo a MODEL_PRICING_USD_PER_MILLION o define GEMINI_PRICE_* en .env)");
+    logger.warn(
+      { model },
+      "modelo sin precio configurado: estimatedCostUSD = null (agrega el modelo a MODEL_PRICING_USD_PER_MILLION o define GEMINI_PRICE_* en .env)",
+    );
   }
 
   const perConversation = conversationIds.map((id) => {
@@ -314,7 +369,12 @@ export function buildCostReport(
       // de los mismos datos reales: total − prompt − candidatos.
       thoughts +=
         call.thoughtsTokens ??
-        Math.max(0, (call.totalTokens ?? 0) - (call.promptTokens ?? 0) - (call.candidateTokens ?? 0));
+        Math.max(
+          0,
+          (call.totalTokens ?? 0) -
+            (call.promptTokens ?? 0) -
+            (call.candidateTokens ?? 0),
+        );
     }
 
     return {
@@ -325,11 +385,15 @@ export function buildCostReport(
       thoughtsTokens: thoughts,
       totalTokens: total,
       latencyMs: latency,
-      estimatedCostUSD: pricing.source === "unknown" ? null : costUSD(prompt, candidate + thoughts, pricing),
+      estimatedCostUSD:
+        pricing.source === "unknown"
+          ? null
+          : costUSD(prompt, candidate + thoughts, pricing),
     };
   });
 
-  const sum = (pick: (c: PerConversationCost) => number) => perConversation.reduce((s, c) => s + pick(c), 0);
+  const sum = (pick: (c: PerConversationCost) => number) =>
+    perConversation.reduce((s, c) => s + pick(c), 0);
   const totalPromptTokens = sum((c) => c.promptTokens);
   const totalCandidateTokens = sum((c) => c.candidateTokens);
   const totalThoughtsTokens = sum((c) => c.thoughtsTokens);
@@ -344,7 +408,13 @@ export function buildCostReport(
     totalLatencyMs: sum((c) => c.latencyMs),
     wallClockMs,
     estimatedCostUSD:
-      pricing.source === "unknown" ? null : costUSD(totalPromptTokens, totalCandidateTokens + totalThoughtsTokens, pricing),
+      pricing.source === "unknown"
+        ? null
+        : costUSD(
+            totalPromptTokens,
+            totalCandidateTokens + totalThoughtsTokens,
+            pricing,
+          ),
     perConversation,
   };
 }
@@ -356,13 +426,23 @@ function tokenOrZero(
 ): number {
   const value = call[field];
   if (typeof value === "number" && Number.isFinite(value)) return value;
-  logger.warn({ conversation_id: call.conversation_id, attempt: call.attempt, field }, "usageMetadata sin el campo; se usa 0");
+  logger.warn(
+    { conversation_id: call.conversation_id, attempt: call.attempt, field },
+    "usageMetadata sin el campo; se usa 0",
+  );
   return 0;
 }
 
 /** Salida facturada = candidatos + thinking (Google cobra ambos a tarifa de output). */
-export function costUSD(inputTokens: number, outputTokens: number, pricing: Pricing): number {
-  const usd = (inputTokens * pricing.inputPerMillion + outputTokens * pricing.outputPerMillion) / 1_000_000;
+export function costUSD(
+  inputTokens: number,
+  outputTokens: number,
+  pricing: Pricing,
+): number {
+  const usd =
+    (inputTokens * pricing.inputPerMillion +
+      outputTokens * pricing.outputPerMillion) /
+    1_000_000;
   return Math.round(usd * 1e8) / 1e8;
 }
 
@@ -370,7 +450,10 @@ export function costUSD(inputTokens: number, outputTokens: number, pricing: Pric
 // Salidas
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function writeOutputs(dir: string, report: BatchReport): Promise<void> {
+export async function writeOutputs(
+  dir: string,
+  report: BatchReport,
+): Promise<void> {
   await mkdir(dir, { recursive: true });
   await writeJsonAtomic(join(dir, "results.json"), report.results);
   await writeJsonAtomic(join(dir, "metrics.json"), report.metrics);
@@ -388,20 +471,46 @@ const SUMMARY_MAX = 60;
 
 export function truncate(text: string, max = SUMMARY_MAX): string {
   const chars = [...text.replace(/\s+/g, " ").trim()];
-  return chars.length <= max ? chars.join("") : `${chars.slice(0, max - 1).join("")}…`;
+  return chars.length <= max
+    ? chars.join("")
+    : `${chars.slice(0, max - 1).join("")}…`;
 }
 
 export function formatSummaryTable(entries: readonly BatchEntry[]): string {
-  const header = ["id", "intent", "urgency", "priority", "actionable", "summary"];
+  const header = [
+    "id",
+    "intent",
+    "urgency",
+    "priority",
+    "actionable",
+    "summary",
+  ];
   const rows = entries.map((e) =>
     isBatchError(e)
       ? [e.conversation_id, "ERROR", "-", "-", "-", truncate(e.error)]
-      : [e.conversation_id, e.intent, e.urgency, e.priority, e.is_actionable ? "sí" : "no", truncate(e.one_line_summary)],
+      : [
+          e.conversation_id,
+          e.intent,
+          e.urgency,
+          e.priority,
+          e.is_actionable ? "sí" : "no",
+          truncate(e.one_line_summary),
+        ],
   );
 
-  const widths = header.map((h, i) => Math.max([...h].length, ...rows.map((r) => [...r[i]!].length)));
-  const line = (cells: readonly string[]) => cells.map((c, i) => c.padEnd(widths[i]!)).join(" | ").trimEnd();
-  return [line(header), widths.map((w) => "-".repeat(w)).join("-|-"), ...rows.map(line)].join("\n");
+  const widths = header.map((h, i) =>
+    Math.max([...h].length, ...rows.map((r) => [...r[i]!].length)),
+  );
+  const line = (cells: readonly string[]) =>
+    cells
+      .map((c, i) => c.padEnd(widths[i]!))
+      .join(" | ")
+      .trimEnd();
+  return [
+    line(header),
+    widths.map((w) => "-".repeat(w)).join("-|-"),
+    ...rows.map(line),
+  ].join("\n");
 }
 
 export function formatTotals(costs: CostReport): string {
@@ -426,14 +535,25 @@ export interface BatchArgs {
 
 /** `[archivo] [--only id1,id2]` en cualquier orden. */
 export function parseArgs(argv: readonly string[]): BatchArgs {
-  let inputPath = "data/conversations.json";
+  let inputPath = "data/conversaciones.json";
   let only: Set<string> | undefined;
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]!;
     if (arg === "--only") {
-      only = new Set((argv[++i] ?? "").split(",").map((s) => s.trim()).filter(Boolean));
+      only = new Set(
+        (argv[++i] ?? "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+      );
     } else if (arg.startsWith("--only=")) {
-      only = new Set(arg.slice(7).split(",").map((s) => s.trim()).filter(Boolean));
+      only = new Set(
+        arg
+          .slice(7)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+      );
     } else {
       inputPath = arg;
     }
@@ -441,10 +561,16 @@ export function parseArgs(argv: readonly string[]): BatchArgs {
   return only && only.size > 0 ? { inputPath, only } : { inputPath };
 }
 
-async function readPreviousResults(path: string): Promise<readonly BatchEntry[]> {
+async function readPreviousResults(
+  path: string,
+): Promise<readonly BatchEntry[]> {
   try {
-    const parsed = JSON.parse(await readFile(path, "utf8")) as { results?: unknown };
-    return Array.isArray(parsed.results) ? (parsed.results as BatchEntry[]) : [];
+    const parsed = JSON.parse(await readFile(path, "utf8")) as {
+      results?: unknown;
+    };
+    return Array.isArray(parsed.results)
+      ? (parsed.results as BatchEntry[])
+      : [];
   } catch {
     return []; // no hay corrida anterior
   }
@@ -455,15 +581,29 @@ async function readPreviousResults(path: string): Promise<readonly BatchEntry[]>
  * resto se conserva. Orden según el archivo de entrada. Las métricas se
  * recalculan sobre el conjunto fusionado; costs.json refleja SOLO esta corrida.
  */
-export function withMergedResults(report: BatchReport, previous: readonly BatchEntry[], order: readonly string[]): BatchReport {
-  const byId = new Map<string, BatchEntry>(previous.map((e) => [e.conversation_id, e]));
+export function withMergedResults(
+  report: BatchReport,
+  previous: readonly BatchEntry[],
+  order: readonly string[],
+): BatchReport {
+  const byId = new Map<string, BatchEntry>(
+    previous.map((e) => [e.conversation_id, e]),
+  );
   for (const e of report.results.results) byId.set(e.conversation_id, e);
   const merged = order.flatMap((id) => {
     const e = byId.get(id);
     return e ? [e] : [];
   });
-  const metrics = calculateMetrics(merged.filter((e) => !isBatchError(e)).map((e) => toMetricsInput(e as AnalysisResult)));
-  return { ...report, results: { ...report.results, results: merged, metrics }, metrics };
+  const metrics = calculateMetrics(
+    merged
+      .filter((e) => !isBatchError(e))
+      .map((e) => toMetricsInput(e as AnalysisResult)),
+  );
+  return {
+    ...report,
+    results: { ...report.results, results: merged, metrics },
+    metrics,
+  };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -473,28 +613,55 @@ export function withMergedResults(report: BatchReport, previous: readonly BatchE
 async function main(): Promise<void> {
   dotenv.config({ quiet: true });
   // Logs a stderr: stdout queda limpio para la tabla.
-  const logger = pino({ name: "batch", level: process.env.LOG_LEVEL ?? "info" }, pino.destination(2));
+  const logger = pino(
+    { name: "batch", level: process.env.LOG_LEVEL ?? "info" },
+    pino.destination(2),
+  );
 
   const env = z
     .object({
-      GEMINI_API_KEY: z.string({ error: "GEMINI_API_KEY es obligatorio" }).trim().min(1, "GEMINI_API_KEY está vacío"),
-      GEMINI_MODEL: z.string({ error: "GEMINI_MODEL es obligatorio" }).trim().min(1, "GEMINI_MODEL está vacío"),
+      GEMINI_API_KEY: z
+        .string({ error: "GEMINI_API_KEY es obligatorio" })
+        .trim()
+        .min(1, "GEMINI_API_KEY está vacío"),
+      GEMINI_MODEL: z
+        .string({ error: "GEMINI_MODEL es obligatorio" })
+        .trim()
+        .min(1, "GEMINI_MODEL está vacío"),
     })
     .safeParse(process.env);
   if (!env.success) {
-    logger.fatal({ issues: env.error.issues.map((i) => i.message) }, "Configuración inválida (revisa .env)");
+    logger.fatal(
+      { issues: env.error.issues.map((i) => i.message) },
+      "Configuración inválida (revisa .env)",
+    );
     process.exit(1);
   }
 
   const args = parseArgs(process.argv.slice(2));
-  const allConversations = z.array(ConversationSchema).parse(JSON.parse(await readFile(args.inputPath, "utf8")));
-  const conversations = args.only ? allConversations.filter((c) => args.only!.has(c.id)) : allConversations;
+  const allConversations = z
+    .array(ConversationSchema)
+    .parse(JSON.parse(await readFile(args.inputPath, "utf8")));
+  const conversations = args.only
+    ? allConversations.filter((c) => args.only!.has(c.id))
+    : allConversations;
   if (args.only) {
-    const unknown = [...args.only].filter((id) => !allConversations.some((c) => c.id === id));
-    if (unknown.length > 0) logger.warn({ unknown }, "--only incluye ids que no existen en el archivo");
+    const unknown = [...args.only].filter(
+      (id) => !allConversations.some((c) => c.id === id),
+    );
+    if (unknown.length > 0)
+      logger.warn(
+        { unknown },
+        "--only incluye ids que no existen en el archivo",
+      );
   }
   logger.info(
-    { inputPath: args.inputPath, count: conversations.length, only: args.only && [...args.only], model: env.data.GEMINI_MODEL },
+    {
+      inputPath: args.inputPath,
+      count: conversations.length,
+      only: args.only && [...args.only],
+      model: env.data.GEMINI_MODEL,
+    },
     "batch iniciado",
   );
 
@@ -502,7 +669,10 @@ async function main(): Promise<void> {
   try {
     pricing = resolvePricing(env.data.GEMINI_MODEL);
   } catch (e) {
-    logger.fatal({ err: e instanceof Error ? e.message : String(e) }, "Configuración de precios inválida");
+    logger.fatal(
+      { err: e instanceof Error ? e.message : String(e) },
+      "Configuración de precios inválida",
+    );
     process.exit(1);
   }
   logger.info({ pricing }, "precio aplicado");
@@ -518,7 +688,10 @@ async function main(): Promise<void> {
       onCall: (entry) => void callLog.push(entry),
     });
   } catch (e) {
-    logger.fatal({ err: e instanceof Error ? e.message : String(e) }, "No se pudo crear el cliente de Gemini");
+    logger.fatal(
+      { err: e instanceof Error ? e.message : String(e) },
+      "No se pudo crear el cliente de Gemini",
+    );
     process.exit(1);
   }
 
@@ -531,7 +704,11 @@ async function main(): Promise<void> {
   });
   // Con --only se fusiona con la corrida anterior: no hay que volver a pagar las que ya salieron bien.
   const finalReport = args.only
-    ? withMergedResults(report, await readPreviousResults("output/results.json"), allConversations.map((c) => c.id))
+    ? withMergedResults(
+        report,
+        await readPreviousResults("output/results.json"),
+        allConversations.map((c) => c.id),
+      )
     : report;
   await writeOutputs("output", finalReport);
 
@@ -540,12 +717,18 @@ async function main(): Promise<void> {
 
   const failed = finalReport.results.results.filter(isBatchError).length;
   if (failed > 0) {
-    logger.warn({ failed }, "hubo conversaciones con error (ver output/results.json)");
+    logger.warn(
+      { failed },
+      "hubo conversaciones con error (ver output/results.json)",
+    );
     process.exitCode = 1;
   }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
   main().catch((e) => {
     console.error(e);
     process.exit(1);

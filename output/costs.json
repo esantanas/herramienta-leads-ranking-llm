@@ -7,12 +7,12 @@
     "matched": "gemini-3.6-flash"
   },
   "totalPromptTokens": 33341,
-  "totalCandidateTokens": 3054,
+  "totalCandidateTokens": 3044,
   "totalThoughtsTokens": 0,
-  "totalTokens": 36395,
-  "totalLatencyMs": 34777,
-  "wallClockMs": 116769,
-  "estimatedCostUSD": 0.03645825,
+  "totalTokens": 36385,
+  "totalLatencyMs": 32343,
+  "wallClockMs": 116731,
+  "estimatedCostUSD": 0.03642075,
   "perConversation": [
     {
       "conversation_id": "conv-001",
@@ -21,58 +21,58 @@
       "candidateTokens": 325,
       "thoughtsTokens": 0,
       "totalTokens": 3706,
-      "latencyMs": 3542,
+      "latencyMs": 3649,
       "estimatedCostUSD": 0.0037545
     },
     {
       "conversation_id": "conv-002",
       "llmCalls": 1,
       "promptTokens": 3341,
-      "candidateTokens": 301,
+      "candidateTokens": 302,
       "thoughtsTokens": 0,
-      "totalTokens": 3642,
-      "latencyMs": 3540,
-      "estimatedCostUSD": 0.0036345
+      "totalTokens": 3643,
+      "latencyMs": 3105,
+      "estimatedCostUSD": 0.00363825
     },
     {
       "conversation_id": "conv-003",
       "llmCalls": 1,
       "promptTokens": 3331,
-      "candidateTokens": 325,
+      "candidateTokens": 318,
       "thoughtsTokens": 0,
-      "totalTokens": 3656,
-      "latencyMs": 3603,
-      "estimatedCostUSD": 0.003717
+      "totalTokens": 3649,
+      "latencyMs": 3146,
+      "estimatedCostUSD": 0.00369075
     },
     {
       "conversation_id": "conv-004",
       "llmCalls": 1,
       "promptTokens": 3333,
-      "candidateTokens": 266,
+      "candidateTokens": 267,
       "thoughtsTokens": 0,
-      "totalTokens": 3599,
-      "latencyMs": 3318,
-      "estimatedCostUSD": 0.00349725
+      "totalTokens": 3600,
+      "latencyMs": 3095,
+      "estimatedCostUSD": 0.003501
     },
     {
       "conversation_id": "conv-005",
       "llmCalls": 1,
       "promptTokens": 3343,
-      "candidateTokens": 364,
+      "candidateTokens": 365,
       "thoughtsTokens": 0,
-      "totalTokens": 3707,
-      "latencyMs": 3556,
-      "estimatedCostUSD": 0.00387225
+      "totalTokens": 3708,
+      "latencyMs": 3300,
+      "estimatedCostUSD": 0.003876
     },
     {
       "conversation_id": "conv-006",
       "llmCalls": 1,
       "promptTokens": 3350,
-      "candidateTokens": 284,
+      "candidateTokens": 281,
       "thoughtsTokens": 0,
-      "totalTokens": 3634,
-      "latencyMs": 3475,
-      "estimatedCostUSD": 0.0035775
+      "totalTokens": 3631,
+      "latencyMs": 3394,
+      "estimatedCostUSD": 0.00356625
     },
     {
       "conversation_id": "conv-007",
@@ -81,18 +81,18 @@
       "candidateTokens": 302,
       "thoughtsTokens": 0,
       "totalTokens": 3626,
-      "latencyMs": 3444,
+      "latencyMs": 3393,
       "estimatedCostUSD": 0.0036255
     },
     {
       "conversation_id": "conv-008",
       "llmCalls": 1,
       "promptTokens": 3319,
-      "candidateTokens": 309,
+      "candidateTokens": 305,
       "thoughtsTokens": 0,
-      "totalTokens": 3628,
-      "latencyMs": 3543,
-      "estimatedCostUSD": 0.003648
+      "totalTokens": 3624,
+      "latencyMs": 3080,
+      "estimatedCostUSD": 0.003633
     },
     {
       "conversation_id": "conv-009",
@@ -101,18 +101,18 @@
       "candidateTokens": 294,
       "thoughtsTokens": 0,
       "totalTokens": 3606,
-      "latencyMs": 3393,
+      "latencyMs": 2862,
       "estimatedCostUSD": 0.0035865
     },
     {
       "conversation_id": "conv-010",
       "llmCalls": 1,
       "promptTokens": 3307,
-      "candidateTokens": 284,
+      "candidateTokens": 285,
       "thoughtsTokens": 0,
-      "totalTokens": 3591,
-      "latencyMs": 3363,
-      "estimatedCostUSD": 0.00354525
+      "totalTokens": 3592,
+      "latencyMs": 3319,
+      "estimatedCostUSD": 0.003549
     }
   ]
 }
